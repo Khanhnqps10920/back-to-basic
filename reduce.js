@@ -9,22 +9,23 @@ Array.prototype.myReduce = function (callbackFn, initialValue) {
     throw Error();
   }
 
-  if (!this.length) {
+  if (!this.length && initialValue === undefined) {
     throw Error();
   }
 
   let tempInitVal = initialValue;
 
-  if (!tempInitVal) {
+  if (tempInitVal === undefined) {
     tempInitVal = this[0];
   }
 
-  let val = initialValue;
+  let val = tempInitVal;
+
   for (let i = 0; i < this.length; i++) {
+    if (initialValue === undefined && i == 0) continue;
+    if (this[i] === undefined) continue;
     val = callbackFn(val, this[i], i, this);
   }
 
   return val;
 };
-
-console.log([1, 2, 3].myReduce((prev, curr) => prev + curr, 0));
