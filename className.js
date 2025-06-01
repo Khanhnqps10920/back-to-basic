@@ -6,44 +6,23 @@
 export default function classNames(...args) {
   let result = "";
 
-  for (let i = 0; i < args.length; i++) {
-    const value = args[i];
-    if ((typeof value === "string" || typeof value === "number") && !!value) {
-      result += value + " ";
-      continue;
-    }
+  for (const arg of args) {
+    if (!arg) continue;
 
-    if (Array.isArray(value)) {
-      for (let j = 0; j < value.length; j++) {
-        const subArrVal = value[j];
+    const type = typeof arg;
 
-        if (typeof subArrVal === "string") {
-          result += subArrVal + " ";
-        } else if (typeof subArrVal === "object" && subArrVal !== null) {
-          const keysArray = Object.keys(value);
-          for (const key of keysArray) {
-            if (subArrVal[key]) {
-              result += key + " ";
-            }
-          }
-        }
-      }
-
-      continue;
-    }
-
-    if (typeof value === "object" && value !== null) {
-      const keysArray = Object.keys(value);
-      for (const key of keysArray) {
-        console.log(key, "key");
-        if (value[key]) {
+    if (type === "string" || type === "number") {
+      result += arg + " ";
+    } else if (Array.isArray(arg)) {
+      result += classNames(...arg) + " ";
+    } else if (type === "object") {
+      for (const key in arg) {
+        if (Object.hasOwn(arg, key) && arg[key]) {
           result += key + " ";
         }
       }
-
-      continue;
     }
   }
 
-  return result.trimEnd();
+  return result.trim();
 }
